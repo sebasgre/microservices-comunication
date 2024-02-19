@@ -3,6 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DocumentoModule } from './documento/documento.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CatalogoModule } from './catalogo/catalogo.module';
+import { NotificacionesModule } from './notificaciones/notificaciones.module';
+import { NoticoModule } from './notico/notico.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -14,7 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     database: 'notifications', // notificaciones
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: true,
-  }),DocumentoModule],
+  }),DocumentoModule, CatalogoModule, NotificacionesModule, NoticoModule],
   controllers: [AppController],
   providers: [AppService],
 })

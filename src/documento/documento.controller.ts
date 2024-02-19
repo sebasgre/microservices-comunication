@@ -33,4 +33,15 @@ export class DocumentoController {
   ) {
     return this.documentService.updateDocument(document, id);
   }
+
+  // Nueva ruta para obtener documentos por catálogo
+  // @Get('catalogo/:catalogId')
+  // getDocumentsByCatalog(@Param('catalogId', ParseIntPipe) catalogId: number) {
+  //   return this.documentService.getDocumentsByCatalog(catalogId);
+  // }
+
+  @Patch(':id/disable')
+  disableDocument(@Param('id', ParseIntPipe) id: number) {
+    return this.documentService.disableDocument(id);
+  }
 }
