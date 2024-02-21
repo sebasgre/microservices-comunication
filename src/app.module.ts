@@ -5,8 +5,6 @@ import { DocumentoModule } from './documento/documento.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CatalogoModule } from './catalogo/catalogo.module';
 import { NotificacionesModule } from './notificaciones/notificaciones.module';
-import { NoticoModule } from './notico/notico.module';
-
 
 @Module({
   imports: [
@@ -23,7 +21,6 @@ import { NoticoModule } from './notico/notico.module';
     DocumentoModule,
     CatalogoModule,
     NotificacionesModule,
-    NoticoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
