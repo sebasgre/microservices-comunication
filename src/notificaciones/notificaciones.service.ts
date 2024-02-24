@@ -3,8 +3,13 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotificacionEntity } from './notificaciones.entity';
 import { CatalogoEntity } from 'src/catalogo/catalogo.entity';
+import { DocumentoEntity } from 'src/documento/documento.entity';
 
-
+interface NotificacionData {
+  catalogoId: number;
+  documentoId: number;
+  // Add other properties of notificacion here
+}
 @Injectable()
 export class NotificacionesService {
   constructor(
@@ -12,14 +17,58 @@ export class NotificacionesService {
     private notificacionRepository: Repository<NotificacionEntity>,
     @InjectRepository(CatalogoEntity)
     private catalogoRepository: Repository<CatalogoEntity>,
+    @InjectRepository(DocumentoEntity)
+    private documentoRepository: Repository<DocumentoEntity>,
   ) {}
 
-  createNotificacion(notificacion: NotificacionEntity) {
-    return this.notificacionRepository.save(notificacion);
+
+  
+  async createNotificacionWithCatalogoAndDocument(notificacionData: NotificacionData) {
+    const { catalogoId, documentoId, ...notificacionDetails } = notificacionData;
+  
+    // Crear la notificación
+    const nuevaNotificacion = await this.notificacionRepository.save(notificacionDetails);
+  
+    // Obtener el catálogo asociado
+    const catalogo = await this.catalogoRepository.findOne({ where: { id: catalogoId }, relations: ['documentos'] });
+    if (!catalogo) {
+      throw new Error('El catálogo especificado no existe');
+    }
+  
+    // Verificar que el documento existe en el catálogo
+    const documento = catalogo.documentos.find((doc) => doc.id === documentoId);
+    if (!documento) {
+      throw new Error('El documento especificado no existe en el catálogo');
+    }
+  
+    // Asociar el documento al catálogo
+    catalogo.documentos = [documento];
+  
+    // Guardar el catálogo actualizado
+    await this.catalogoRepository.save(catalogo);
+  
+    // Asociar la notificación con el catálogo y el documento específico
+    nuevaNotificacion.catalogos = [catalogo];
+  
+    // Guardar la notificación actualizada
+    await this.notificacionRepository.save(nuevaNotificacion);
+  
+    return nuevaNotificacion;
   }
 
-  getNotificaciones() {
-    return this.notificacionRepository.find();
+
+  async countNotificacionesByUsuario(usuarioId: number): Promise<number> {
+    return this.notificacionRepository.count({ where: { usuarioId } });
+  }
+
+  async getNotificacionesWithCatalogoAndDocuments() {
+    const notificaciones = await this.notificacionRepository.createQueryBuilder('notificacion')
+      .leftJoinAndSelect('notificacion.catalogos', 'catalogo')
+      .leftJoinAndSelect('catalogo.documentos', 'documento')
+      .select(['notificacion', 'catalogo', 'documento'])
+      .getMany();
+
+    return notificaciones;
   }
 
   getNotificacion(id: number) {
@@ -91,4 +140,14 @@ export class NotificacionesService {
           .getMany();
         return notificaciones;
       }
+
+      async getNotificacionesByUsuario(usuarioId: number) {
+        const notificaciones = await this.notificacionRepository.createQueryBuilder('notificacion')
+          .innerJoinAndSelect('notificacion.catalogos', 'catalogo') // Incluimos el catálogo y sus documentos
+          .innerJoinAndSelect('catalogo.documentos', 'documento')
+          .where('notificacion.usuarioId = :usuarioId', { usuarioId })
+          .getMany();
+        return notificaciones;
+      }
+
 }

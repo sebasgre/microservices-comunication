@@ -7,14 +7,24 @@ import { NotificacionEntity } from './notificaciones.entity';
 export class NotificacionesController {
   constructor(private notificacionService: NotificacionesService) {}
 
+  // @Post()
+  // createNotificacion(@Body() notificacion: NotificacionEntity) {
+  //   return this.notificacionService.createNotificacion(notificacion);
+  // }
+
+  // @Get()
+  // getNotificaciones() {
+  //   return this.notificacionService.getNotificaciones();
+  // }
+
   @Post()
-  createNotificacion(@Body() notificacion: NotificacionEntity) {
-    return this.notificacionService.createNotificacion(notificacion);
+  async createNotificacionWithCatalogoAndDocuments(@Body() notificacionData: any) {
+    return this.notificacionService.createNotificacionWithCatalogoAndDocument(notificacionData);
   }
 
-  @Get()
-  getNotificaciones() {
-    return this.notificacionService.getNotificaciones();
+  @Get('count/:usuarioId')
+  async countNotificacionesByUsuario(@Param('usuarioId') usuarioId: number): Promise<number> {
+    return this.notificacionService.countNotificacionesByUsuario(usuarioId);
   }
 
   @Get(':id')
@@ -51,5 +61,15 @@ export class NotificacionesController {
     @Get(':id/catalogo')
   getNotificacionesByCatalogo(@Param('id', ParseIntPipe) id: number) {
     return this.notificacionService.getNotificacionesByCatalogo(id);
+  }
+
+  @Get(':id/usuario')
+  getNotificacionesByUsuario(@Param('id', ParseIntPipe) id: number) {
+    return this.notificacionService.getNotificacionesByUsuario(id);
+  }
+
+  @Get()
+  getNotificacionesWithCatalogoAndDocuments() {
+    return this.notificacionService.getNotificacionesWithCatalogoAndDocuments();
   }
 }
