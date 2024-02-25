@@ -14,8 +14,9 @@ export class CatalogoService {
     private documentoRepository: Repository<DocumentoEntity>,
 ) { }
 
-createCatalogo(catalogo: CatalogoEntity) {
-  return this.catalogoRepository.save(catalogo);
+async createCatalogo(catalogo: CatalogoEntity) {
+  const newCatalogo = await this.catalogoRepository.save(catalogo);
+  return this.catalogoRepository.findOne({where: {id: newCatalogo.id}});
 }
 
 getCatalogos() {
@@ -32,8 +33,9 @@ deleteCatalogo(id: number) {
   return this.catalogoRepository.delete({ id: id });
 }
 
-updateCatalogo(catalogo: CatalogoEntity, id: number) {
-    return this.catalogoRepository.update({ id: id }, catalogo);
+async updateCatalogo(catalogo: CatalogoEntity, id: number) {
+    await this.catalogoRepository.update({ id: id }, catalogo);
+    return this.catalogoRepository.findOne({where: {id:id}});
 }
 
 async addDocumentToCatalogo(catalogoId: number, documentoId: number) {

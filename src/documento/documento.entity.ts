@@ -31,17 +31,4 @@ export class DocumentoEntity {
 
     @ManyToMany(() => CatalogoEntity)
     catalogos: CatalogoEntity[];
-
-    // Método para formatear la fecha y hora
-    // get fechaHoraFormateada(): string {
-    //     return this.fechaHora.toLocaleString('es-ES', { 
-    //         year: 'numeric', 
-    //         month: '2-digit', 
-    //         day: '2-digit', 
-    //         hour: '2-digit', 
-    //         minute: '2-digit', 
-    //         second: '2-digit', 
-    //         hour12: false 
-    //     });
-    // }
 }
