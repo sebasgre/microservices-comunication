@@ -7,20 +7,20 @@ import { NotificacionEntity } from './notificaciones.entity';
 export class NotificacionesController {
   constructor(private notificacionService: NotificacionesService) {}
 
-  // @Post()
-  // createNotificacion(@Body() notificacion: NotificacionEntity) {
-  //   return this.notificacionService.createNotificacion(notificacion);
-  // }
+  @Post()
+  createNotificacion(@Body() notificacion: NotificacionEntity) {
+    return this.notificacionService.createNotificacion(notificacion);
+  }
 
   // @Get()
   // getNotificaciones() {
   //   return this.notificacionService.getNotificaciones();
   // }
 
-  @Post()
-  async createNotificacionWithCatalogoAndDocuments(@Body() notificacionData: any) {
-    return this.notificacionService.createNotificacionWithCatalogoAndDocument(notificacionData);
-  }
+  // @Post()
+  // async createNotificacionWithCatalogoAndDocuments(@Body() notificacionData: any) {
+  //   return this.notificacionService.createNotificacionWithCatalogoAndDocument(notificacionData);
+  // }
 
   @Get('count/:usuarioId')
   async countNotificacionesByUsuario(@Param('usuarioId') usuarioId: number): Promise<number> {

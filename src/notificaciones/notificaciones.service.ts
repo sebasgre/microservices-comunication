@@ -71,10 +71,19 @@ export class NotificacionesService {
     return notificaciones;
   }
 
-  getNotificacion(id: number) {
-    return this.notificacionRepository.findOne({
-      where: { id: id },
-    });
+ async getNotificacion(id: number) {
+    const notificacion = await this.notificacionRepository.createQueryBuilder('notificacion')
+      .leftJoinAndSelect('notificacion.catalogos', 'catalogo')
+      .leftJoinAndSelect('catalogo.documentos', 'documento')
+      .select(['notificacion', 'catalogo', 'documento'])
+      .where('notificacion.id = :id', { id: id })
+      .getOne();
+
+    return notificacion;
+  }
+
+  createNotificacion(notificacion: NotificacionEntity) {
+    return this.notificacionRepository.save(notificacion);
   }
 
   deleteNotificacion(id: number) {
