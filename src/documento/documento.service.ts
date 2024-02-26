@@ -45,4 +45,13 @@ export class DocumentoService {
     documento.deshabilitado = true;
     return this.documentoRepository.save(documento);
   }
+
+  async enableDocument(id: number) {
+    const documento = await this.documentoRepository.findOne({ where: { id: id } });
+    if (!documento) {
+      throw new Error(`Documento con id ${id} no encontrado`);
+    }
+    documento.deshabilitado = false;
+    return this.documentoRepository.save(documento);
+  }
 }

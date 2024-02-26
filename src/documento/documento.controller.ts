@@ -44,4 +44,9 @@ export class DocumentoController {
   disableDocument(@Param('id', ParseIntPipe) id: number) {
     return this.documentService.disableDocument(id);
   }
+
+  @Patch(':id/enable')
+  enableDocument(@Param('id', ParseIntPipe) id: number) {
+    return this.documentService.enableDocument(id);
+  }
 }

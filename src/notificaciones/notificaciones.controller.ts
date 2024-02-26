@@ -58,6 +58,11 @@ export class NotificacionesController {
       return this.notificacionService.disableNotificacion(id);
     }
 
+    @Patch(':id/enable')
+    enableNotificacion(@Param('id', ParseIntPipe) id: number) {
+      return this.notificacionService.enableNotificacion(id);
+    }
+
     @Get(':id/catalogo')
   getNotificacionesByCatalogo(@Param('id', ParseIntPipe) id: number) {
     return this.notificacionService.getNotificacionesByCatalogo(id);

@@ -56,6 +56,11 @@ export class CatalogoController {
       return this.catalogoService.disableCatalogo(id);
     }
 
+    @Patch(':id/enable')
+    enableCatalogo(@Param('id', ParseIntPipe) id: number) {
+      return this.catalogoService.enableCatalogo(id);
+    }
+
     @Get(':id/documentos')
     getDocumentosByCatalogo(@Param('id', ParseIntPipe) id: number) {
       return this.catalogoService.getDocumentsByCatalog(id);

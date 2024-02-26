@@ -85,6 +85,16 @@ async addDocumentToCatalogo(catalogoId: number, documentoId: number) {
     return this.catalogoRepository.save(catalogo);
   }
 
+
+  async enableCatalogo(id: number) {
+    const catalogo = await this.catalogoRepository.findOne({where: {id:id}});
+    if (!catalogo) {
+      throw new Error(`Catalogo con id ${id} no encontrado`);
+    }
+    catalogo.deshabilitado = false;
+    return this.catalogoRepository.save(catalogo);
+  }
+
 async getDocumentsByCatalog(id: number) {
     const catalogo = await this.catalogoRepository.findOne({
         where: { id: id },

@@ -133,6 +133,20 @@ export class NotificacionesService {
         return notificacion;
     }
 
+    async enableNotificacion(id: number) {
+        const notificacion = await this.notificacionRepository.findOne({
+        where: { id: id },
+        });
+    
+        if (!notificacion) {
+        throw new Error('La notificación no existe');
+        }
+    
+        notificacion.deshabilitado = false;
+        await this.notificacionRepository.save(notificacion);
+        return notificacion;
+    }
+
     async getNotificacionesByCatalogo(catalogoId: number) {
         const notificaciones = await this.notificacionRepository.createQueryBuilder('notificacion')
           .innerJoin('notificacion.catalogos', 'catalogo')
